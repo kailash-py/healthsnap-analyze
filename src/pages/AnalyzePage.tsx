@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,6 +10,7 @@ import PreferencesForm from "@/components/PreferencesForm";
 import ResultsDisplay from "@/components/ResultsDisplay";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 // Types for our application state
 export type HealthPreferences = {
@@ -47,11 +47,8 @@ const AnalyzePage = () => {
   // Handle image upload
   const handleImageUpload = (file: File) => {
     setImage(file);
-    // In a real application, we would send this to an OCR service
-    // For now, let's simulate OCR processing with a timeout
     setIsLoading(true);
     setTimeout(() => {
-      // Sample nutrition label text
       const sampleText = 
 `Nutrition Facts
 Serving Size: 1 cup (240ml)
@@ -89,33 +86,29 @@ Calcium 30%      Iron 0%
   };
 
   // Handle preferences submission
-  const handlePreferencesSubmit = (preferences: HealthPreferences) => {
+  const handlePreferencesSubmit = async (preferences: HealthPreferences) => {
     setHealthPreferences(preferences);
-    // In a real application, we would send this data to the AI service (Gemini)
-    // For now, let's simulate AI processing with a timeout
     setIsLoading(true);
-    setTimeout(() => {
-      // Sample analysis result
-      const sampleResult: AnalysisResult = {
-        rating: 3.5,
-        feedback: "This product is moderately suitable for your health profile. While it provides good protein content, the sugars and saturated fat content are higher than ideal for your goals.",
-        positiveHighlights: [
-          "Good source of protein (8g per serving)",
-          "Contains 30% of daily calcium needs",
-          "No trans fats"
-        ],
-        healthConcerns: [
-          "Contains 12g of sugars per serving",
-          "Moderate saturated fat content (3g)",
-          "Low in dietary fiber"
-        ]
-      };
-      
-      setResult(sampleResult);
-      setIsLoading(false);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('analyze-nutrition', {
+        body: {
+          nutritionText: editedText,
+          healthPreferences: preferences,
+        },
+      });
+
+      if (error) throw error;
+
+      setResult(data);
       setStep(4);
       toast.success("Analysis complete!");
-    }, 3000);
+    } catch (error) {
+      console.error('Analysis error:', error);
+      toast.error("Error analyzing nutrition label. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Navigate to previous step
