@@ -8,8 +8,8 @@
     --background: 210 40% 98%;
     --foreground: 222.2 84% 4.9%;
 
-    --primary: 210 40% 96.1%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 210 70% 65%;
+    --primary-foreground: 210 40% 98%;
 
     --secondary: 216 41% 79%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -20,11 +20,11 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 222.2 47% 11.2%;
     --foreground: 210 40% 98%;
 
-    --primary: 210 40% 96.1%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 210 70% 45%;
+    --primary-foreground: 210 40% 98%;
 
     --secondary: 216 41% 49%;
     --secondary-foreground: 210 40% 98%;
@@ -44,9 +44,9 @@
   }
 }
 
-/* Gradient background utility class */
+/* Blue gradient background utility class */
 .gradient-background {
-  background: linear-gradient(90deg, hsla(186, 33%, 94%, 1) 0%, hsla(216, 41%, 79%, 1) 100%);
+  background: linear-gradient(90deg, hsla(210, 100%, 85%, 1) 0%, hsla(216, 100%, 70%, 1) 100%);
 }
 
 /* Card shadow utility class for a subtle elevation effect */

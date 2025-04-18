@@ -54,7 +54,7 @@ export default {
         },
       },
       backgroundImage: {
-        'gradient-primary': 'linear-gradient(90deg, hsla(186, 33%, 94%, 1) 0%, hsla(216, 41%, 79%, 1) 100%)',
+        'gradient-primary': 'linear-gradient(90deg, hsla(210, 100%, 75%, 1) 0%, hsla(216, 100%, 60%, 1) 100%)',
       },
       borderRadius: {
         lg: "var(--radius)",
