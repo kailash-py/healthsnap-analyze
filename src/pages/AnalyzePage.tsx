@@ -36,6 +36,20 @@ const initialPreferences: HealthPreferences = {
   wellnessGoals: ""
 };
 
+// Mock result for testing or fallback
+const mockResult: AnalysisResult = {
+  rating: 3,
+  feedback: "This is a sample analysis of the nutrition label. In a real scenario, we would provide detailed nutritional insights based on your preferences.",
+  positiveHighlights: [
+    "Contains protein which is essential for muscle maintenance",
+    "Calcium content supports bone health"
+  ],
+  healthConcerns: [
+    "Contains added sugars which should be consumed in moderation",
+    "Moderate sodium content - monitor if you have specific health concerns"
+  ]
+};
+
 const AnalyzePage = () => {
   const [step, setStep] = useState<number>(1);
   const [image, setImage] = useState<File | null>(null);
@@ -92,6 +106,21 @@ Calcium 30%      Iron 0%
     setIsLoading(true);
 
     try {
+      // For demo purposes, if we encounter an error with the edge function, use mock data
+      // In production, you'd want to handle this differently
+      const useMockData = false; // Set to true for testing without the edge function
+
+      if (useMockData) {
+        // Use mock data for demo/testing
+        setTimeout(() => {
+          setResult(mockResult);
+          setStep(4);
+          toast.success("Analysis complete!");
+          setIsLoading(false);
+        }, 1500);
+        return;
+      }
+
       const { data, error } = await supabase.functions.invoke('analyze-nutrition', {
         body: {
           nutritionText: editedText,
@@ -99,14 +128,26 @@ Calcium 30%      Iron 0%
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message || 'Error calling analysis function');
+      }
+
+      if (!data) {
+        throw new Error('No data returned from analysis function');
+      }
 
       setResult(data);
       setStep(4);
       toast.success("Analysis complete!");
     } catch (error) {
       console.error('Analysis error:', error);
-      toast.error("Error analyzing nutrition label. Please try again.");
+      
+      // Fallback to mock data in case of error for demo purposes
+      // In production, you might want to show the error and let the user retry
+      setResult(mockResult);
+      setStep(4);
+      toast.error("Error analyzing nutrition label. Using sample data instead.");
     } finally {
       setIsLoading(false);
     }
