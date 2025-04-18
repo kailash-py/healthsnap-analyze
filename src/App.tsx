@@ -10,14 +10,15 @@ import AnalyzePage from "./pages/AnalyzePage";
 import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
 
+// Create a client for React Query
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
+  <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
         <Layout>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -26,9 +27,9 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </BrowserRouter>
 );
 
 export default App;
